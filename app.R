@@ -110,10 +110,11 @@ server <- function(input, output, session) {
     #                       image = "wheat.png",
     #                       label = "combinable_crops"
     # )
-    removed <<-  nodes %>% filter((label == "combinable crops" & row_number() == 1))
-    
+    removed <- nodes %>% filter((label == "combinable crops"))#nodes %>% filter((label == "combinable crops" & row_number() == 1))
+    removed <- removed[,"id" ][1]
+    nodes <<- nodes %>% filter(!id == removed)
     visNetworkProxy("network", session = session) %>% 
-      visRemoveNodes(removed$id)
+      visRemoveNodes(removed)
   })
 }
 
