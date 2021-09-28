@@ -15,11 +15,13 @@ library(dplyr)
 
 #read the data
 
-df <- read.csv("hackathon.csv")
+df <- read.csv("C:/Users/crimar/Documents/Repositories/Proposal/TrialVis/hackathon.csv")
 nodes <- data.frame(id = 1:12, 
                shape = "image",
                image = paste0(df[,c("images")]),
-               label = df[,c("Farm.System")])
+               label = df[,c("Farm.System")],
+               amm_Kg = df[,c("Kg..farm.of.ammonia..as.NH3.")]
+)
 
 
 edges <- data.frame(from = c(1), to = c(1))
@@ -74,9 +76,10 @@ ui <-  dashboardPage(
 
                     background-size: 100% 100%;
                     border: 2px solid #e9385a;
-                    background-image: url('farm-background.jpg');}"))
+                    background-image: url('farm-background_white.jpg');}"))
     ),
-        visNetworkOutput("network", width = "100%", height = "500px")
+        visNetworkOutput("network", width = "100%", height = "500px"),
+        textOutput("calculation_amm")
       )
    )
 
@@ -96,7 +99,8 @@ server <- function(input, output, session) {
      newnode <- data.frame(id = nrow(nodes) +1,
                            shape = "image",
                          image = "wheat.png",
-                         label = "combinable crops"
+                         label = "combinable crops",
+                         amm_Kg = "1408.571429"
     )
     nodes <<- rbind(nodes, newnode)
    
@@ -115,6 +119,10 @@ server <- function(input, output, session) {
     nodes <<- nodes %>% filter(!id == removed)
     visNetworkProxy("network", session = session) %>% 
       visRemoveNodes(removed)
+  })
+  
+  observe(nodes,{
+  output$calculation_amm <- renderText({sum(nodes$amm_Kg)})
   })
 }
 
