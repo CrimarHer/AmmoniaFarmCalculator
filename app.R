@@ -15,13 +15,13 @@ library(dplyr)
 
 #read the data
 
-df <- read.csv("C:/Users/crimar/Documents/Repositories/Proposal/TrialVis/hackathon.csv")
-nodes <- data.frame(id = 1:12, 
-               shape = "image",
-               image = paste0(df[,c("images")]),
-               label = df[,c("Farm.System")],
-               amm_Kg = df[,c("Kg..farm.of.ammonia..as.NH3.")]
-)
+df <- read.csv("hackathon.csv")
+# nodes <- data.frame(id = 1:12, 
+#                shape = "image",
+#                image = paste0(df[,c("images")]),
+#                label = df[,c("Farm.System")],
+#                amm_Kg = df[,c("Kg..farm.of.ammonia..as.NH3.")]
+# )
 
 
 edges <- data.frame(from = c(1), to = c(1))
@@ -86,26 +86,42 @@ ui <-  dashboardPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
-   
+  formula <- reactiveValues(nodes=data.frame(id = 1:12,
+                                             shape =  "image",
+                                             image =  paste0(df[,c("images")]),
+                                             label = df[,c("Farm.System")],
+                                             amm_Kg =  df[,c("Kg..farm.of.ammonia..as.NH3.")]))
+  # formula <- reactiveValues({ nodes = data.frame(
+  #   id = 1:12,
+  #   shape =  "image",
+  #   image =  paste0(df[,c("images")]),
+  #   label = df[,c("Farm.System")],
+  #   amm_Kg =  df[,c("Kg..farm.of.ammonia..as.NH3.")]
+  # )
+    
+ # })
+  
+  observe({
+  
   output$network <- renderVisNetwork({
     
    
-    visNetwork(nodes = nodes, edges)  #%>% visInteraction(selectConnectedEdges = FALSE, selectable = TRUE)%>% visIgraphLayout (smooth = T,layout = "layout_in_circle") %>% #https://igraph.org/r/doc/layout_.html
+    visNetwork(nodes = formula$nodes, edges)  #%>% visInteraction(selectConnectedEdges = FALSE, selectable = TRUE)%>% visIgraphLayout (smooth = T,layout = "layout_in_circle") %>% #https://igraph.org/r/doc/layout_.html
       
       #visNodes(size = 30, font = list(size = 25)) %>% visEdges(width = 3, selectionWidth = 6) #%>%  visOptions(highlightNearest = list(enabled = T, degree = list(from = 1, to = 1), hover = T, algorithm= "hierarchical")) 
 })
   #Add a combinable crops item
   observeEvent(input$plus_combinable_crops,{
-     newnode <- data.frame(id = nrow(nodes) +1,
+     newnode <- data.frame(id = nrow(formula$nodes) +1,
                            shape = "image",
                          image = "wheat.png",
                          label = "combinable crops",
                          amm_Kg = "1408.571429"
     )
-    nodes <<- rbind(nodes, newnode)
+    formula$nodes <- rbind(formula$nodes, newnode)
    
     visNetworkProxy("network", session = session) %>% 
-      visUpdateNodes(nodes)
+      visUpdateNodes(formula$nodes)
   })
   
   observeEvent(input$minus_combinable_crops,{
@@ -114,17 +130,20 @@ server <- function(input, output, session) {
     #                       image = "wheat.png",
     #                       label = "combinable_crops"
     # )
-    removed <- nodes %>% filter((label == "combinable crops"))#nodes %>% filter((label == "combinable crops" & row_number() == 1))
+    removed <- formula$nodes %>% filter((label == "combinable crops"))#nodes %>% filter((label == "combinable crops" & row_number() == 1))
     removed <- removed[,"id" ][1]
-    nodes <<- nodes %>% filter(!id == removed)
+    formula$nodes <- formula$nodes %>% filter(!id == removed)
     visNetworkProxy("network", session = session) %>% 
       visRemoveNodes(removed)
   })
   
-  observe(nodes,{
-  output$calculation_amm <- renderText({sum(nodes$amm_Kg)})
+  observeEvent(formula$nodes,{
+  output$calculation_amm <- renderText({paste("The result is =", sum(as.numeric(formula$nodes$amm_Kg)))})
   })
+
+  })#end of observe  
 }
+
 
 # Run the application 
 shinyApp(ui = ui, server = server)
