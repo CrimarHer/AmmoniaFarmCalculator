@@ -12,6 +12,7 @@ library(visNetwork)
 library(shinydashboard)
 library(shinydashboardPlus)
 library(dplyr)
+library(stringr)
 
 #read the data
 
@@ -112,11 +113,16 @@ server <- function(input, output, session) {
 })
   #Add a combinable crops item
   observeEvent(input$plus_combinable_crops,{
-     newnode <- data.frame(id = nrow(formula$nodes) +1,
+    if (exists("id_combinable_crops")){
+    id_combinable_crops <<- paste0("combinable", as.numeric(str_remove(id_combinable_crops, "combinable")) + 1 )
+    } else {
+      id_combinable_crops <<- paste0("combinable",nrow(formula$nodes) +1)
+    }
+     newnode <- data.frame(id = id_combinable_crops,
                            shape = "image",
                          image = "wheat.png",
                          label = "combinable crops",
-                         amm_Kg = "1408.571429"
+                         amm_Kg = 1408.571429
     )
     formula$nodes <- rbind(formula$nodes, newnode)
    
