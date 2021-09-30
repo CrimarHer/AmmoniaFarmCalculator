@@ -46,7 +46,7 @@ ui <-  dashboardPage(
         collapsed = TRUE,
         actionButton(inputId = "plus_combinable_crops", 
                      
-                     label = img (src="plus_wheat.png", width="150", height="150"))
+                     label = img (src="plus_wheat.png", width="50", height="50"))
         
       )
     ),
@@ -59,7 +59,7 @@ ui <-  dashboardPage(
         
         actionButton(inputId = "minus_combinable_crops",
                      
-                     label = img (src="minus_wheat.png", width="150", height="150"))
+                     label = img (src="minus_wheat.png", width="50", height="50"))
       )
     )#,
      # actionButton(inputId = "plus_combinable_crops", 
@@ -76,11 +76,11 @@ ui <-  dashboardPage(
                     height: 500px;
 
                     background-size: 100% 100%;
-                    border: 2px solid #e9385a;
+                    border: 2px solid black;
                     background-image: url('farm-background_white.jpg');}"))
     ),
         visNetworkOutput("network", width = "100%", height = "500px"),
-        textOutput("calculation_amm")
+        htmlOutput("calculation_amm")
       )
    )
 
@@ -138,13 +138,17 @@ server <- function(input, output, session) {
     # )
     removed <- formula$nodes %>% filter((label == "combinable crops"))#nodes %>% filter((label == "combinable crops" & row_number() == 1))
     removed <- removed[,"id" ][1]
+    if (is.na(removed)){
+      return()
+    } else{
     formula$nodes <- formula$nodes %>% filter(!id == removed)
     visNetworkProxy("network", session = session) %>% 
       visRemoveNodes(removed)
+    }
   })
   
   observeEvent(formula$nodes,{
-  output$calculation_amm <- renderText({paste("The result is =", sum(as.numeric(formula$nodes$amm_Kg)))})
+  output$calculation_amm <- renderUI({HTML(paste0("<p style = 'font-size: 30px; font-weight:bold;'>The Ammonia emmited is ", round(sum(as.numeric(formula$nodes$amm_Kg)), 2), " Kg</p>"))})
   })
 
   })#end of observe  
