@@ -30,65 +30,123 @@ edgesmitigation <- data.frame(from = c(6), to = c(6))
 #create a transparent node that is always there and the edges go to it.
 
 # Define UI for application that draws a histogram
-ui <-  dashboardPage(
+ui <-  fluidPage(
   
+  # App title ----
+  titlePanel("Ammonia Farm Calculator"),
   
-
-  dashboardHeader(title = "Ammonia Farm Calculator"),
-   
-  
-   
-   # Sidebar with a slider input for number of bins 
-  dashboardSidebar(
-    accordion(
-      id = "accordion_plus",
-      accordionItem(
-        title = "Add Items",
-        
-        collapsed = TRUE,
-        actionButton(inputId = "plus_combinable_crops", 
-                     
-                     label = img (src="CombinableCropsPLUS.png", width="50", height="50"))
-        
-      )
-    ),
-    accordion(
-      id = "accordion_minus",
-      accordionItem(
-        title = "Remove Items",
-        
-        collapsed = TRUE,
-        
-        actionButton(inputId = "minus_combinable_crops",
-                     
-                     label = img (src="CombinableCropsMINUS.png", width="50", height="50"))
-      )
-    )#,
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+    
+    # Sidebar panel for inputs ----
+    sidebarPanel (),
+     
+    #,
      # actionButton(inputId = "plus_combinable_crops", 
      #               
      #              label = img (src="plus_wheat.png", width="150", height="150")),
      # actionButton(inputId = "minus_combinable_crops",
      # 
      #              label = img (src="minus_wheat.png", width="150", height="150"))
-  ),
+ 
       # Show a plot of the generated distribution
-  dashboardBody(#background-size: 100% 100%;
-    tags$head(tags$style(HTML("#maindivnetwork{
-                    width: 100%;
-                    height: 50px;
-                    background-size: 100% 100%;
-                    
-                    border: 2px solid black;
-                    background-image: url('background_white_50.png');}"))
-    ),
+  mainPanel(width = 12, #background-size: 100% 100%;
+    # tags$head(tags$style(HTML("#maindivnetwork{
+    #                 width: 100%;
+    #                 height: 50px;
+    #                 background-size: 100% 100%;
+    #                 
+    #                 border: 2px solid black;
+    #                 background-image: url('background_white_50.png');}"))
+    # ),
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
     ),
     htmlOutput("calculation_amm"),  
     tabsetPanel(type = "tabs",
                 tabPanel("Your Farm",
-       
-            visNetworkOutput("network", width = "100%", height = "700px")
+                         column(2, 
+                                
+                                tags$div(class = "buttons_div",
+                                         tags$h3("Combinable Crops"), 
+                         actionButton(inputId = "plus_combinable_crops", 
+                                      
+                                      label = img (src="CombinableCropsPLUS.png", width="70", height="70")),
+                         
+                         
+                         
+                         actionButton(inputId = "minus_combinable_crops",
+                                      
+                                      label = img (src="CombinableCropsMINUS.png", width="70", height="70"))
+            
+                                ), 
+            tags$div(class = "buttons_div",
+                     tags$h3("combinable + pig manure"), 
+                     actionButton(inputId = "plus_Combinable_Crops_PigManure", 
+                                  
+                                  label = img (src="CombinableCropsPigManurePLUS.png", width="70", height="70")),
+                     
+                     
+                     
+                     actionButton(inputId = "minus_Combinable_Crops_PigManure",
+                                  
+                                  label = img (src="CombinableCropsPigManureMINUS.png", width="70", height="70"))
+            ), 
+            tags$div(class = "buttons_div",
+                     tags$h3("Roots/combinable crops"), 
+                     actionButton(inputId = "plus_RootsCombinableCrops", 
+                                  
+                                  label = img (src="RootsCombinableCropsPLUS.png", width="70", height="70")),
+                     
+                     
+                     
+                     actionButton(inputId = "minus_RootsCombinableCrops",
+                                  
+                                  label = img (src="RootsCombinableCropsMINUS.png", width="70", height="70"))
+            )),#column,
+            column(2, 
+                   
+                   tags$div(class = "buttons_div",
+                            tags$h3("Dairy"), 
+                            actionButton(inputId = "plus_Dairy", 
+                                         
+                                         label = img (src="DairyPLUS.png", width="70", height="70")),
+                            
+                            
+                            
+                            actionButton(inputId = "minus_Dairy",
+                                         
+                                         label = img (src="DairyMINUS.png", width="70", height="70"))
+                            
+                   ), 
+                   tags$div(class = "buttons_div",
+                            tags$h3("Grazing - lowland"), 
+                            actionButton(inputId = "plus_GrazingLowland", 
+                                         
+                                         label = img (src="GrazingLowlandPLUS.png", width="70", height="70")),
+                            
+                            
+                            
+                            actionButton(inputId = "minus_GrazingLowland",
+                                         
+                                         label = img (src="GrazingLowlandMINUS.png", width="70", height="70"))
+                   ), 
+                   tags$div(class = "buttons_div",
+                            tags$h3("Grazing - LFA"), 
+                            actionButton(inputId = "plus_GrazingLFA", 
+                                         
+                                         label = img (src="GrazingLFAPLUS.png", width="70", height="70")),
+                            
+                            
+                            
+                            actionButton(inputId = "minus_GrazingLFA",
+                                         
+                                         label = img (src="GrazingLFAMINUS.png", width="70", height="70"))
+                   )),#column,
+                  column(8,   visNetworkOutput("network", width = "100%", height = "700px"))
+            
+                     
+            
       ),
       tabPanel(
          "Mitigation Measures", 
@@ -153,10 +211,10 @@ ui <-  dashboardPage(
       column(8, 
         visNetworkOutput("mitigation", width = "100%", height = "700px")
       ))
-      ))
+      )))
         
-      )
-   #)
+      
+   )
 
 
 # Define server logic required to draw a histogram
@@ -229,6 +287,72 @@ server <- function(input, output, session) {
       visRemoveNodes(removed)
     }
   })
+  
+  observeEvent(input$minus_Combinable_Crops_PigManure,{
+    
+    removed <- formula$nodes %>% filter((label == "combinable \n+ pig manure"))
+    removed <- removed[,"id" ][1]
+    if (is.na(removed)){
+      return()
+    } else{
+      formula$nodes <- formula$nodes %>% filter(!id == removed)
+      visNetworkProxy("network", session = session) %>% 
+        visRemoveNodes(removed)
+    }
+  })
+  
+  observeEvent(input$minus_RootsCombinableCrops,{
+    
+    removed <- formula$nodes %>% filter((label == "Roots/ \ncombinable crops"))
+    removed <- removed[,"id" ][1]
+    if (is.na(removed)){
+      return()
+    } else{
+      formula$nodes <- formula$nodes %>% filter(!id == removed)
+      visNetworkProxy("network", session = session) %>% 
+        visRemoveNodes(removed)
+    }
+  })
+  
+  observeEvent(input$minus_Dairy,{
+    
+    removed <- formula$nodes %>% filter((label == "Dairy"))
+    removed <- removed[,"id" ][1]
+    if (is.na(removed)){
+      return()
+    } else{
+      formula$nodes <- formula$nodes %>% filter(!id == removed)
+      visNetworkProxy("network", session = session) %>% 
+        visRemoveNodes(removed)
+    }
+  })
+  
+  observeEvent(input$minus_GrazingLowland,{
+    
+    removed <- formula$nodes %>% filter((label == "Grazing \nLowland"))
+    removed <- removed[,"id" ][1]
+    if (is.na(removed)){
+      return()
+    } else{
+      formula$nodes <- formula$nodes %>% filter(!id == removed)
+      visNetworkProxy("network", session = session) %>% 
+        visRemoveNodes(removed)
+    }
+  })
+  
+  observeEvent(input$minus_GrazingLFA,{
+    
+    removed <- formula$nodes %>% filter((label == "Grazing - \nLFA"))
+    removed <- removed[,"id" ][1]
+    if (is.na(removed)){
+      return()
+    } else{
+      formula$nodes <- formula$nodes %>% filter(!id == removed)
+      visNetworkProxy("network", session = session) %>% 
+        visRemoveNodes(removed)
+    }
+  })
+  
   observeEvent(input$minus_NewChickenHouse,{
     
     removed <- mitig$nodes %>% filter((label == "New \nchicken \nhouse"))
@@ -398,7 +522,103 @@ server <- function(input, output, session) {
       visUpdateNodes(mitig$nodes)
   })
   
+  observeEvent(input$plus_Combinable_Crops_PigManure,{
+    if (exists("id_Combinable_Crops_PigManure")){
+      id_Combinable_Crops_PigManure <<- paste0("Combinable_Crops_PigManure", as.numeric(str_remove(id_Combinable_Crops_PigManure, "Combinable_Crops_PigManure")) + 1 )
+    } else {
+      id_Combinable_Crops_PigManure <<- paste0("Combinable_Crops_PigManure",nrow(formula$nodes) +1)
+    }
+    newnode <- data.frame(id = id_Combinable_Crops_PigManure,
+                          shape = "image",
+                          image = "CombinableCropsPigManure.png",
+                          label = "combinable \n+ pig manure",
+                          amm_Kg = 7164.285714
+    )
+    formula$nodes <- rbind(formula$nodes, newnode)
+    
+    visNetworkProxy("network", session = session) %>% 
+      visUpdateNodes(formula$nodes)
+  })
   
+  
+  observeEvent(input$plus_RootsCombinableCrops,{
+    if (exists("id_RootsCombinableCrops")){
+      id_RootsCombinableCrops <<- paste0("RootsCombinableCrops", as.numeric(str_remove(id_RootsCombinableCrops, "RootsCombinableCrops")) + 1 )
+    } else {
+      id_RootsCombinableCrops <<- paste0("RootsCombinableCrops",nrow(formula$nodes) +1)
+    }
+    newnode <- data.frame(id = id_RootsCombinableCrops,
+                          shape = "image",
+                          image = "RootsCombinableCrops.png",
+                          label = "Roots/ \ncombinable crops",
+                          amm_Kg = 1044.285714
+                          
+    )
+    formula$nodes <- rbind(formula$nodes, newnode)
+    
+    visNetworkProxy("network", session = session) %>% 
+      visUpdateNodes(formula$nodes)
+  })
+  
+  
+  observeEvent(input$plus_Dairy,{
+    if (exists("id_Dairy")){
+      id_Dairy <<- paste0("Dairy", as.numeric(str_remove(id_Dairy, "Dairy")) + 1 )
+    } else {
+      id_Dairy <<- paste0("Dairy",nrow(formula$nodes) +1)
+    }
+    newnode <- data.frame(id = id_Dairy,
+                          shape = "image",
+                          image = "Dairy.png",
+                          label = "Dairy",
+                          amm_Kg = 5221.428571
+                          
+    )
+    formula$nodes <- rbind(formula$nodes, newnode)
+    
+    visNetworkProxy("network", session = session) %>% 
+      visUpdateNodes(formula$nodes)
+  })
+  
+  
+  
+  observeEvent(input$plus_GrazingLowland,{
+    if (exists("id_GrazingLowland")){
+      id_GrazingLowland <<- paste0("GrazingLowland", as.numeric(str_remove(id_GrazingLowland, "GrazingLowland")) + 1 )
+    } else {
+      id_GrazingLowland <<- paste0("GrazingLowland",nrow(formula$nodes) +1)
+    }
+    newnode <- data.frame(id = id_GrazingLowland,
+                          shape = "image",
+                          image = "GrazingLowland.png",
+                          label = "Grazing \nLowland",
+                          amm_Kg = 1396.428571
+                          
+    )
+    formula$nodes <- rbind(formula$nodes, newnode)
+    
+    visNetworkProxy("network", session = session) %>% 
+      visUpdateNodes(formula$nodes)
+  })
+  
+  observeEvent(input$plus_GrazingLFA,{
+    if (exists("id_GrazingLFA")){
+      id_GrazingLFA <<- paste0("GrazingLFA", as.numeric(str_remove(id_GrazingLFA, "GrazingLFA")) + 1 )
+    } else {
+      id_GrazingLFA <<- paste0("GrazingLFA",nrow(formula$nodes) +1)
+    }
+    newnode <- data.frame(id = id_GrazingLFA,
+                          shape = "image",
+                          image = "GrazingLFA.png",
+                          label = "Grazing \nLowland",
+                          amm_Kg = 874.2857143
+                          
+    )
+    formula$nodes <- rbind(formula$nodes, newnode)
+    
+    visNetworkProxy("network", session = session) %>% 
+      visUpdateNodes(formula$nodes)
+  })
   
 
   
