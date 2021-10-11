@@ -420,7 +420,7 @@ server <- function(input, output, session) {
   })
   
   observeEvent(c(formula$nodes,mitig$nodes),{
-  output$calculation_amm <- renderUI({HTML(paste0("<p style = 'font-size: 30px; font-weight:bold;'>The Ammonia emmited is ", round(sum(as.numeric(formula$nodes$amm_Kg), as.numeric(mitig$nodes$amm_Kg)), 2), " Kg</p>"))})
+  output$calculation_amm <- renderUI({HTML(paste0("<p style = 'font-size: 30px; font-weight:bold;'>The Ammonia emmited is ", round(sum(as.numeric(formula$nodes$amm_Kg), as.numeric(mitig$nodes$amm_Kg)), 2), " kg/year</p>"))})
   })
   
   
