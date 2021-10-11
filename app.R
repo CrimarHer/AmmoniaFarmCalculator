@@ -33,7 +33,7 @@ edgesmitigation <- data.frame(from = c(6), to = c(6))
 ui <-  fluidPage(
   
   # App title ----
-  titlePanel("Ammonia Farm Calculator"),
+  titlePanel("Ammonia Calculator Tool"),
   
   # Sidebar layout with input and output definitions ----
   sidebarLayout(
