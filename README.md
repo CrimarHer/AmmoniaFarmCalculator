@@ -33,10 +33,10 @@ In a second tab, called mitigation, the user can add or remove mitigation measur
 ![mitigation tab](./mitig.png)
 
 When a user removes mitigation measures the ammonia increases.
-![Less mitigation measures](./mitig_inAction.png)
+![Less mitigation measures](./mitig_inAction.PNG)
 
 In the example below, the user selected numerous dairy items in the farm so the ammonia emission increases.
-![More dairy](./dairyIncrease.png)
+![More dairy](./dairyIncrease.PNG)
 
 ## Outlook
 
