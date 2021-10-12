@@ -27,15 +27,19 @@ We needed icons and add/ remove buttons for 13 farm types and 5 mitigation techn
 ## Demonstration of the final product
 
 In the image below shows the prototype of the app. The initial view shows the tab "Your Farm". A basic farm setup is pre-loaded with an ammonia emission calculated and the user can add or remove farm types.
+
 ![initial view when the app opens](./init.png)
 
 In a second tab, called mitigation, the user can add or remove mitigation measures.
+
 ![mitigation tab](./mitig.png)
 
 When a user removes mitigation measures the ammonia increases.
+
 ![Less mitigation measures](./mitig_inAction.PNG)
 
 In the example below, the user selected numerous dairy items in the farm so the ammonia emission increases.
+
 ![More dairy](./dairyIncrease.PNG)
 
 ## Outlook
